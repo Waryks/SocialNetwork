@@ -7,6 +7,9 @@ import socialnetwork.domain.validators.FriendValidator;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.repository.Repository;
 import socialnetwork.utils.Graph;
+import socialnetwork.utils.events.FriendEvent;
+import socialnetwork.utils.observer.Observable;
+import socialnetwork.utils.observer.Observer;
 
 
 import java.time.LocalDateTime;
@@ -17,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class FriendService {
+public class FriendService implements Observable<FriendEvent> {
     private Repository<Tuple<Long,Long>, Friends> repo;
 
     public FriendService(Repository<Tuple<Long,Long>, Friends> repo) {
@@ -57,6 +60,7 @@ public class FriendService {
         Tuple t = new Tuple(idLeft,idRight);
         Friends friend = new Friends(t,response);
         Friends task = repo.save(friend);
+        notifyObservers(new FriendEvent());
         return task;
     }
 
@@ -76,6 +80,7 @@ public class FriendService {
         Friends t = new Friends(new Tuple<>(idLeft,idRight));
         List<Friends> friends;
         friends = getAllFriends();
+        notifyObservers(new FriendEvent());
         repo.delete(t.getId(),friends);
     }
     public void respondRequest(String id1, String id2, UserService userService, String response){
@@ -95,6 +100,7 @@ public class FriendService {
         if(response.equals("accept")) {
             addFriend(id1,id2,userService,response);
         }
+        notifyObservers(new FriendEvent());
     }
 
     public int Comunity(int size){
@@ -195,5 +201,21 @@ public class FriendService {
     }
     public Iterable<Friends> getAll(){
         return repo.findAll();
+    }
+
+    private List<Observer<FriendEvent>> observers=new ArrayList<>();
+    @Override
+    public void addObserver(Observer<FriendEvent> e) {
+        observers.add(e);
+    }
+
+    @Override
+    public void removeObserver(Observer<FriendEvent> e) {
+        observers.remove(e);
+    }
+
+    @Override
+    public void notifyObservers(FriendEvent t) {
+        observers.stream().forEach(x->x.update(t));
     }
 }

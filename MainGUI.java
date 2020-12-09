@@ -1,6 +1,14 @@
 package socialnetwork;
 
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import socialnetwork.config.ApplicationContext;
+import socialnetwork.controller.LoginController;
+import socialnetwork.controller.MenuController;
 import socialnetwork.domain.Friends;
 import socialnetwork.domain.Message;
 import socialnetwork.domain.Tuple;
@@ -15,16 +23,19 @@ import socialnetwork.repository.file.UserFile;
 import socialnetwork.service.FriendService;
 import socialnetwork.service.MessageService;
 import socialnetwork.service.UserService;
-import socialnetwork.ui.UI;
 
-public class Main {
-    public static void main(String[] args) {
+public class MainGUI extends Application {
+
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+
+        FXMLLoader loader=new FXMLLoader();
+        loader.setLocation(getClass().getResource("/views/login.fxml"));
+        Parent root=loader.load();
+
         String users_fileName="d:\\JAVA\\MaSinucid3\\data\\users.csv";
         String friends_fileName="d:\\JAVA\\MaSinucid3\\data\\friends.csv";
         String message_fileName="d:\\JAVA\\MaSinucid3\\data\\messages.csv";
-        //String fileName="data/users.csv";
-        /*Repository0<Long,Utilizator> userFileRepository = new UtilizatorFile0(users_fileName
-                , new UtilizatorValidator());*/
 
         Repository<Long, User> userFileRepository = new UserFile(users_fileName, new UserValidator());
         UserService userService = new UserService(userFileRepository);
@@ -35,15 +46,18 @@ public class Main {
         Repository<Long, Message> messageFileRepository = new MessageFile(message_fileName, new MessageValidator());
         MessageService messageService = new MessageService(messageFileRepository,userService,friendService);
 
-        /*UI ui = new UI(userService,friendService,messageService);
-        Utilizator use = new Utilizator("Florin","Peste");
-        long id = 69;
-        use.setId(id);
-        System.out.println(use);
-        userFileRepository.save(use);
-        ui.menu();*/
-        MainGUI.main(args);
+        LoginController ctrl=loader.getController();
+        ctrl.setService(userService,messageService,friendService);
+        ctrl.setPrimaryStage(primaryStage);
+
+        primaryStage.setScene(new Scene(root, 750, 450));
+        primaryStage.setTitle("My Social Network");
+        primaryStage.show();
+
     }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
 }
-
-

@@ -7,6 +7,9 @@ import socialnetwork.domain.User;
 import socialnetwork.domain.validators.MessageValidator;
 import socialnetwork.domain.validators.UserValidator;
 import socialnetwork.repository.Repository;
+import socialnetwork.utils.events.MessageEvent;
+import socialnetwork.utils.observer.Observable;
+import socialnetwork.utils.observer.Observer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class MessageService {
+public class MessageService implements Observable<MessageEvent> {
     private UserService userService;
     private FriendService friendService;
     private Repository<Long, Message> repo;
@@ -137,5 +140,19 @@ public class MessageService {
         return repo.findAll();
     }
 
+    private List<Observer<MessageEvent>> observers=new ArrayList<>();
+    @Override
+    public void addObserver(Observer<MessageEvent> e) {
+        observers.add(e);
+    }
 
+    @Override
+    public void removeObserver(Observer<MessageEvent> e) {
+        observers.remove(e);
+    }
+
+    @Override
+    public void notifyObservers(MessageEvent t) {
+        observers.stream().forEach(x->x.update(t));
+    }
 }
