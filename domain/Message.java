@@ -1,85 +1,46 @@
 package socialnetwork.domain;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Objects;
 
 public class Message extends Entity<Long>{
-    private User from;
-    private List<User> to;
-    private String messageText;
-    private String reply;
-    private LocalDateTime timestamp;
-    public Message(){}
+    private Long from_id;
+    private Long to_id;
+    private String message;
+    private String reply=null;
+    private LocalDateTime date;
+    private Messagetype type;
 
-    /**Constructor
-     * @param id_message long
-     * @param from User object
-     * @param to List of users
-     * @param message String
-     * @param reply String
-     */
-    public Message(Long id_message, User from, List<User> to, String message, String reply){
-        this.from = from;
-        this.to = to;
-        this.messageText = message;
-        this.reply = reply;
-        timestamp = LocalDateTime.now();
-        id = id_message;
+    public Message(Long from_id, Long to_id, String message,String type, LocalDateTime date) {
+        this.from_id = from_id;
+        this.to_id = to_id;
+        this.message = message;
+        this.date = date;
+        if(type.equals("privatemessage")){
+            this.type=Messagetype.privatemessage;
+        }
+        if(type.equals("groupmessage")){
+            this.type=Messagetype.groupmessage;
+        }
+    }
+    public Message(Long from_id, Long to_id, String message,String type, LocalDateTime date,String reply) {
+        this.from_id = from_id;
+        this.to_id = to_id;
+        this.message = message;
+        this.date = date;
+        this.reply=reply;
+        if(type.equals("privatemessage")){
+            this.type=Messagetype.privatemessage;
+        }
+        if(type.equals("groupmessage")){
+            this.type=Messagetype.groupmessage;
+        }
     }
 
-    /**Constructor
-     * @param id_message long
-     * @param from User object
-     * @param to List of users
-     * @param message String
-     * @param reply String
-     * @param timestamp LocalDateTime
-     */
-    public Message(Long id_message, User from, List<User> to, String message, String reply, LocalDateTime timestamp){
-        this.from = from;
-        this.to = to;
-        this.messageText = message;
-        this.reply = reply;
-        this.timestamp = timestamp;
-        id = id_message;
+    public Message() {
+
     }
 
-    /**
-     * @return from user
-     */
-    public User getFrom() {
-        return from;
-    }
-
-    public void setFrom(User from) {
-        this.from = from;
-    }
-
-    /**
-     * @return to user
-     */
-    public List<User> getTo() {
-        return to;
-    }
-
-    public void setTo(List<User> to) {
-        this.to = to;
-    }
-
-    /**
-     * @return message
-     */
-    public String getMessageText() {
-        return messageText;
-    }
-
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
-    }
-
-    /**
-     * @return reply
-     */
     public String getReply() {
         return reply;
     }
@@ -88,30 +49,73 @@ public class Message extends Entity<Long>{
         this.reply = reply;
     }
 
-    /**
-     * @return timestamp
-     */
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public Long getFrom_id() {
+        return from_id;
+    }
+
+    public void setFrom_id(Long from_id) {
+        this.from_id = from_id;
+    }
+
+    public Long getTo_id() {
+        return to_id;
+    }
+
+    public void setTo_id(Long to_id) {
+        this.to_id = to_id;
+    }
+
+
+    public Messagetype getType() {
+        return type;
+    }
+
+    public void setType(Messagetype type) {
+        this.type = type;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     @Override
     public String toString() {
-        return getId()+","+from+","+to+","+messageText+","+reply;
+        return "Message{" +
+                "from_id=" + from_id +
+                ", to_id=" + to_id +
+                ", message='" + message + '\'' +
+                ", date=" + date +
+                ", type=" + type +
+                '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Message)) return false;
-        Message that = (Message) o;
-        boolean ok1, ok2 = true;
-        ok1 = getFrom().equals(that.getFrom());
-        for(User to: getTo()){
-            if(getTo().equals(to)==false)
-                ok2 = false;
-        }
-        return ok1 == true && ok2 == true;
+        Message message1 = (Message) o;
+        return Objects.equals(getFrom_id(), message1.getFrom_id()) &&
+                Objects.equals(getTo_id(), message1.getTo_id()) &&
+                Objects.equals(getMessage(), message1.getMessage()) &&
+                Objects.equals(getDate(), message1.getDate()) &&
+                getType() == message1.getType();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFrom_id(), getTo_id(), getMessage(), getDate(),  getType());
     }
 
 }

@@ -1,314 +1,389 @@
+/*
 package socialnetwork.ui;
 
-import socialnetwork.domain.Friends;
+import socialnetwork.domain.Friendship;
 import socialnetwork.domain.Message;
 import socialnetwork.domain.User;
-import socialnetwork.domain.validators.FriendValidator;
+import socialnetwork.domain.validators.FriendshipValidator;
 import socialnetwork.domain.validators.MessageValidator;
 import socialnetwork.domain.validators.UserValidator;
 import socialnetwork.domain.validators.ValidationException;
-import socialnetwork.service.FriendService;
+import socialnetwork.service.FriendshipService;
 import socialnetwork.service.MessageService;
 import socialnetwork.service.UserService;
 
-
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.StreamSupport;
 
 public class UI {
-    private UserService userService;
-    private FriendService friendService;
-    private MessageService messageService;
-    private Scanner sin = new Scanner(System.in);
-    public UI(UserService userService, FriendService friendService, MessageService messageService){
-        this.userService = userService;
-        this.friendService = friendService;
-        this.messageService = messageService;
-    }
-    private void addFriend(){
+    private UserService user_crt;
+    private FriendshipService friendship_crt;
+    private MessageService message_crt;
 
-        System.out.println("Id number one: ");
-        String id1 = sin.next();
-        System.out.println("Id number two: ");
-        String id2 = sin.next();
-        try{
-            friendService.addFriend(id1,id2,userService);
-            System.out.println("The friend request from " + id1 + " to " + id2 + " is pending!\n");
-        }
-        catch(ValidationException exception ){
-            System.out.println(exception.getMessage());
-        }
+    public UI(UserService user_crt, FriendshipService friendship_crt,MessageService message_crt) {
+        this.user_crt = user_crt;
+        this.friendship_crt = friendship_crt;
+        this.message_crt = message_crt;
     }
 
-    private void addUser(){
+
+    public void addUserUi(){
         try{
-            System.out.println("First name: ");
-            String firstName = sin.next();
-            UserValidator.isName(firstName);
-            System.out.println("Last name: ");
-            String lastName = sin.next();
-            UserValidator.isName(lastName);
-            userService.addUser(firstName,lastName);
-            System.out.println("User "+ firstName + " " + lastName + " has been added!\n");
-        }
-        catch(ValidationException exception ){
-            System.out.println(exception.getMessage());
+            Scanner f = new Scanner(System.in);
+            System.out.println("Add First Name:");
+            String firstname = f.next();
+            UserValidator.firstNameValidate(firstname);
+
+            System.out.println("Add Last Name:");
+            String lastname = f.next();
+            UserValidator.lastNameValidate(lastname);
+
+            System.out.println("Add Age:");
+            String age = f.next();
+            UserValidator.ageValidate(age);
+
+            System.out.println("Add Favourite Food:");
+            String favF = f.next();
+            UserValidator.favFoodValidate(favF);
+
+            user_crt.addUser(firstname,lastname,age,favF);
+            System.out.println("The user was succesfully added!");
+            System.out.println("Welcome!");
+        }catch(ValidationException | IllegalArgumentException exp){
+            System.out.println(exp.getMessage());
         }
     }
 
-    private void removeFriend(){
-
-        System.out.println("Id number one: ");
-        String id1 = sin.next();
-        System.out.println("Id number two: ");
-        String id2 = sin.next();
-
+    public void removeUserUi(){
         try{
-            friendService.removeFriend(id1,id2);
-            System.out.println("The friends " + id1 + ":" + id2 + " were removed!\n");
-        }
-        catch(ValidationException exception ){
-            System.out.println(exception.getMessage());
+            Scanner f = new Scanner(System.in);
+            System.out.println("The Id of the User you want to delete:");
+            String Id_to_remove_s=f.next();
+            UserValidator.idExistenceValidate(Id_to_remove_s,user_crt.getAll());
+
+            user_crt.removeUser(Id_to_remove_s);
+            friendship_crt.removeUserFriends(Id_to_remove_s);
+            System.out.println("The User was succesfully removed!");
+        }catch(ValidationException | IllegalArgumentException exp){
+            System.out.println(exp.getMessage());
         }
     }
 
-    private void removeUser(){
+    public void removeFriendshipUI(){
+        try {
+            Scanner f = new Scanner(System.in);
 
-        System.out.println("The id of the user which you want to be removed: ");
-        String id = sin.next();
+            System.out.println("The id of the 1st friend:");
+            String id1_s = f.next();
+            UserValidator.idExistenceValidate(id1_s,user_crt.getAll());
 
+            System.out.println("The id of the 2nd friend:");
+            String id2_s = f.next();
+            UserValidator.idExistenceValidate(id2_s,user_crt.getAll());
+
+            FriendshipValidator.idsExistenceValidate(id1_s,id2_s,friendship_crt.getAll());
+
+            Friendship new_f = friendship_crt.removeFriendship(id1_s, id2_s);
+            System.out.println("The Friendship was succesfully removed!So sad!");
+        }catch(ValidationException | IllegalArgumentException exp){
+            System.out.println(exp.getMessage());
+        }
+    }
+
+    public void showFriendsofUserUI(){
         try{
-            userService.removeUser(id);
-            long idLeft = FriendValidator.is_long(id);
-            for (Friends friend : friendService.getAllFriends()) {
-                String id1 = String.valueOf(friend.getIdLeft()),id2 = String.valueOf(friend.getIdRight());
-                //System.out.println("ID:"+id+ " " + id1+" "+id2);
-                if(id.equals(id1) || id.equals(id2)){
-                    //System.out.println("Am intrat aici!");
-                    friendService.removeFriend(id1,id2);
+            Scanner f = new Scanner(System.in);
+
+            System.out.println("The id of User:");
+            String id1_s = f.next();
+            UserValidator.idExistenceValidate(id1_s,user_crt.getAll());
+
+            List<String> list_of_friends = friendship_crt.getAllFriendsUser(id1_s,user_crt);
+            for(String friend:list_of_friends){
+                System.out.println(friend);
+            }
+            if(list_of_friends.isEmpty()){
+                System.out.println("No Friends yet :'(");
+            }
+        }catch(ValidationException | IllegalArgumentException exp){
+            System.out.println(exp.getMessage());
+        }
+    }
+
+    public void showFriendsofUserUIMonth(){
+        try{
+            Scanner f = new Scanner(System.in);
+
+            System.out.println("The id of User:");
+            String id1_s = f.next();
+            UserValidator.idExistenceValidate(id1_s,user_crt.getAll());
+
+            System.out.println("The month:");
+            String month = f.next();
+            FriendshipValidator.monthValidate(month);
+
+            List<String> list_of_friends = friendship_crt.getAllFriendsUserMonth(id1_s,month,user_crt);
+            for(String friend:list_of_friends){
+                System.out.println(friend);
+            }
+            if(list_of_friends.isEmpty()){
+                System.out.println("No Friends from that time yet!");
+            }
+        }catch(ValidationException | IllegalArgumentException exp){
+            System.out.println(exp.getMessage());
+        }
+    }
+
+    public void SendFriendRequestUI(){
+        try{
+            Scanner f = new Scanner(System.in);
+
+            System.out.println("The id of the sender:");
+            String id1_s = f.next();
+            UserValidator.idExistenceValidate(id1_s,user_crt.getAll());
+
+            System.out.println("The id of the receiver:");
+            String id2_s = f.next();
+            UserValidator.idExistenceValidate(id2_s,user_crt.getAll());
+
+            FriendshipValidator.idsNonExistenceValidate(id1_s,id2_s,friendship_crt.getAll());
+
+            Friendship new_f = friendship_crt.addFriendship(id1_s,id2_s);
+            System.out.println("The Friend Request was sent succesfully!");
+        }catch(ValidationException | IllegalArgumentException exp){
+            System.out.println(exp.getMessage());
+        }
+    }
+
+    public void respondFriendRequestUI(){
+        try{
+            Scanner f = new Scanner(System.in);
+
+            System.out.println("The id of the receiver:");
+            String id1_s = f.next();
+            UserValidator.idExistenceValidate(id1_s,user_crt.getAll());
+
+            System.out.println("The id of the sender:");
+            String id2_s = f.next();
+            UserValidator.idExistenceValidate(id2_s,user_crt.getAll());
+
+            FriendshipValidator.FriendRequestExistence(id2_s,id1_s,friendship_crt.getAll());
+
+            System.out.println("The Response:(yes/no)");
+            String response = f.next();
+            FriendshipValidator.responseValidate(response);
+            if(response.equals("yes")){
+                friendship_crt.respondFriendRequest(id1_s,id2_s,"approved");
+                System.out.println("The Friend Request was approved succesfully!");
+            }
+            if(response.equals("no")){
+                //friendship_crt.respondFriendRequest(id1_s,id2_s,"rejected");    --in caz ca dorim sa salvam versiunea rejected(un fel de block)
+                friendship_crt.removeFriendship(id1_s,id2_s);
+                System.out.println("The Friend Request was rejected succesfully!");
+            }
+        }catch(ValidationException | IllegalArgumentException exp){
+            System.out.println(exp.getMessage());
+        }
+    }
+
+    public void sendMessageUI(){
+        try {
+            Scanner f = new Scanner(System.in);
+
+            System.out.println("The id of the sender:");
+            String from = f.next();
+            UserValidator.idExistenceValidate(from,user_crt.getAll());
+
+            System.out.println("To how many friends you want to send this message:");
+            String nr = f.next();
+            MessageValidator.NumberValidate(nr);
+            Long nrl = Long.parseLong(nr);
+
+            List <String> to = new ArrayList<>();
+            System.out.println("Insert the friend's ids:");
+            for(int i=1;i<=nrl;i++){
+                System.out.println("Id number " + i + " :");
+                String idf = f.next();
+                UserValidator.idExistenceValidate(idf,user_crt.getAll());
+                MessageValidator.differentidsValidate(idf,to,from);
+                to.add(idf);
+            }
+            System.out.println("Insert your message:");
+            String mess = f.nextLine();
+            String part;
+            while(true)
+            {
+                part=f.nextLine();
+                if (part.equalsIgnoreCase("")) break;
+                mess=mess+" "+part;
+            }
+            message_crt.addMessage(from,to,mess,nrl);
+            System.out.println("The Message was sent succesfully!");
+        }catch(ValidationException | IllegalArgumentException exp){
+            System.out.println(exp.getMessage());
+        }
+    }
+
+    public void ConversationUI(){
+        try {
+            Scanner f = new Scanner(System.in);
+
+            System.out.println("The id of the 1st friend:");
+            String id1_s = f.next();
+            UserValidator.idExistenceValidate(id1_s,user_crt.getAll());
+
+            System.out.println("The id of the 2nd friend:");
+            String id2_s = f.next();
+            UserValidator.idExistenceValidate(id2_s,user_crt.getAll());
+
+            List<String> conv=message_crt.Conv(id1_s,id2_s);
+            if(!conv.isEmpty()){
+                System.out.println("--The start of the conversation--\n");
+                for(String line:conv){
+                    System.out.println(line);
                 }
+                System.out.println("\n--The end of the conversation--");
+            }else{
+                System.out.println("This Conversation has no messages yet!");
             }
-            System.out.println("User with the id " + id + " has been removed!\n");
-        }
-        catch(ValidationException exception ){
-            System.out.println(exception.getMessage());
-        }
-    }
-    private void showFriends(){
-        try{
-            System.out.println("The id of the person: ");
-            String id = sin.next();
-            long id_person = FriendValidator.is_long(id);
-            List<String> fr = friendService.friendPerID(id_person, userService.getAllUsers());
-            System.out.println("His friends are: ");
-            for(String friend:fr){
-                System.out.println(friend );
-            }
-        }
-        catch(ValidationException exception ){
-            System.out.println(exception.getMessage());
-        }
-    }
-    private void showFriendsYM(){
-        try{
-            System.out.println("The id of the person: ");
-            String id = sin.next();
-            long id_person = FriendValidator.is_long(id);
-            System.out.println("The year when the friends were made: ");
-            String year = sin.next();
-            FriendValidator.is_int(year);
-            System.out.println("The month when the friends were made: ");
-            String month = sin.next();
-            FriendValidator.is_int(month);
-            List<String> fr = friendService.friendPerIDYM(id_person, year, month,userService.getAllUsers());
-            System.out.println("His friends are: ");
-            for(String friend:fr){
-                System.out.println(friend );
-            }
-        }
-        catch(ValidationException exception ){
-            System.out.println(exception.getMessage());
-        }
-    }
-    public void message(){
-        try{
-            System.out.println("Who sends the message(id): ");
-            String idFrom = sin.next();
-            System.out.println("To how many people you want to send? ");
-            String n = sin.next();
-            List <String> idTo = new ArrayList<>();
-            int number = MessageValidator.is_int(n);
-            for(int index = 0; index < number; index++){
-                System.out.println("Id of the person: ");
-                idTo.add(index,sin.next());
-            }
-            String message = null, reply = null;
-            System.out.println("Message: ");
-            message = sin.nextLine();
-            while (true) {
-                String str = sin.nextLine();
-                if (str.equalsIgnoreCase("")) break;
-                message += str;
-            }
-            System.out.println("Seen or not to seen? Y/N");
-            String answer = sin.next();
-            if(answer.equals("N")) {
-                System.out.println("Their reply: ");
-                reply = sin.next();
-                while (true) {
-                    String s = sin.nextLine();
-                    if (s.equalsIgnoreCase("")) break;
-                    reply += s;
-                }
-            }
-            else
-                reply = "";
-            /*System.out.println("Their reply: ");
-            reply = sin.next();
-            while (true) {
-                String s = sin.nextLine();
-                if (s.equalsIgnoreCase("")) break;
-                reply += s;
-            }*/
-            messageService.addMessage(idFrom,idTo,message,reply);
-            System.out.println("The message was sent!");
-        }
-        catch(ValidationException exception ){
-            System.out.println(exception.getMessage());
-        }
-    }
-    public void deleteMessage(){
-        try{
-            System.out.println("Give the id that u want to be deleted: ");
-            String id = sin.next();
-            messageService.removeMessage(id);
-        }
-            catch(ValidationException exception ){
-            System.out.println(exception.getMessage());
-        }
-
-    }
-    public void nrComunity(){
-        int nr = friendService.Comunity(userService.getAllUsers().size()+1);
-        if(nr == 0)
-            System.out.println("No comunity exists");
-        else
-            System.out.println("The number of comunities are: " + nr);
-    }
-    public void nrComunityMax(){
-        friendService.ComunityMax(userService.getAllUsers().size()+1);
-    }
-    public void Conversation(){
-        System.out.println("Who sends the message(id): ");
-        String idFrom = sin.next();
-        System.out.println("To how many people you want to send? ");
-        String n = sin.next();
-        List <String> idTo = new ArrayList<>();
-        int number = MessageValidator.is_int(n);
-        for(int index = 0; index < number; index++){
-            System.out.println("Id of the person: ");
-            idTo.add(index,sin.next());
-        }
-        messageService.showConversation(idFrom,idTo);
-    }
-    public void respond(){
-        System.out.println("Id number one: ");
-        String id1 = sin.next();
-        System.out.println("Id number two: ");
-        String id2 = sin.next();
-        System.out.println("accept|decline");
-        String response = sin.next();
-        try{
-            friendService.respondRequest(id1,id2,userService,response);
-            System.out.println("The friend request from " + id1 + " to " + id2 + " has been "+response+"ed!\n");
-        }
-        catch(ValidationException exception ){
-            System.out.println(exception.getMessage());
+        }catch(ValidationException | IllegalArgumentException exp){
+            System.out.println(exp.getMessage());
         }
     }
 
-    public void showMenu(){
-        System.out.println("Choose option:\n" +
-                //            "0: Hidden option for showing all of the lists\n"+
-                "M: Menu\n" +
-                "1: Add friend\n" +
-                "2: Add user\n" +
-                "3: Remove friend\n" +
-                "4: Remove user\n" +
-                "5: Number of comunities\n" +
-                "6: Biggest comunity and its component\n" +
-                "7: All the friends of a person\n" +
-                "8: All the friends of a person from a specific year and month\n" +
-                "9: Messenger \n" +
-                "10: The conversation of certain users \n" +
-                "11: Respond to friend requests \n" +
-                "Exit\n");
+    public void respondGroupChat(){
+        try {
+            Scanner f = new Scanner(System.in);
+
+            System.out.println("The id of the User who wants to reply:");
+            String from = f.next();
+            UserValidator.idExistenceValidate(from,user_crt.getAll());
+
+            System.out.println("The id of the Group Chat:");
+            String id_group = f.next();
+            MessageValidator.idValidate(id_group);
+            MessageValidator.idExistenceValidatefrom(id_group,message_crt.getAll(),from);
+
+            System.out.println("Insert your reply:");
+            String mess = f.nextLine();
+            String part;
+            while(true)
+            {
+                part=f.nextLine();
+                if (part.equalsIgnoreCase("")) break;
+                mess=mess+" "+part;
+            }
+
+            System.out.println("Mesajul tau:"+mess);
+            message_crt.respondGroupchat(from,id_group,mess);
+            System.out.println("The Reply was sent succesfully!");
+        }catch(ValidationException | IllegalArgumentException exp){
+            System.out.println(exp.getMessage());
+        }
     }
-    public void menu(){
-        showMenu();
-        while(true){
-            System.out.println("Choose command\n:");
-            String command = sin.next();
-            switch(command){
-                case "M":
-                    showMenu();
-                    break;
-                case "0":
-                    /*System.out.println(userService.getAll());
-                   */ System.out.println("Users: ");
-                    for (User user : userService.getAllUsers()) {
-                        System.out.println(user);
+
+    public void run(){
+        Scanner in=new Scanner(System.in);
+        Running:while(true){
+            System.out.println(
+                    "--The List of Commands:\n" +
+                    "--0:Exit\n" +
+                    "--1:Show Users\n" +
+                    "--2:Add User\n" +
+                    "--3:Remove User\n" +
+                    "--4:Send Friend Request\n" +
+                    "--5:Respond Friend Request\n" +
+                    "--6:Remove Friend Request or approved/rejected Friendship\n" +
+                    "--7:Show All Friends of an User\n" +
+                    "--8:Show All Friends of an User made in a specific month\n" +
+                    "--9:Message Users\n" +
+                    "--10:Show Conversation of 2 Users\n" +
+                    "--11:Respond to a group chat\n" +
+                    "--39:Show All Messages\n" +
+                    "--40:Show All Friendships\n\n" +
+                    "()Your Command:");
+            String cmd = in.next();
+            while(!cmd.matches("[//-]?[1-9][0-9]*") && !cmd.matches("0")){
+                System.out.println("The Command needs to be a number!");
+                System.out.println("Your Command:");
+                cmd=in.next();
+            }
+            int nr = Integer.parseInt(cmd);
+            switch(nr)
+            {
+                case 0:
+                    System.out.println("Exiting...");
+                    break Running;
+                case 1:
+                    System.out.println("Users:");
+                    Iterable<User> users=user_crt.getAll();;
+                    for(User i:users){
+                        System.out.println(i);
                     }
-                    System.out.println("Friends: ");
-                    for (Friends friend : friendService.getAllFriends()) {
-                        System.out.println(friend+" "+friend.getDate());
+                    System.out.println("");
+                    break;
+                case 2:
+                    System.out.println("Adding User...");
+                    addUserUi();
+                    break;
+                case 3:
+                    System.out.println("Removing User...");
+                    removeUserUi();
+                    break;
+                case 4:
+                    System.out.println("Sending Friend Request...");
+                    SendFriendRequestUI();
+                    break;
+                case 5:
+                    System.out.println("Responding Friend Request...");
+                    respondFriendRequestUI();
+                    break;
+                case 6:
+                    System.out.println("Removing Friendship...");
+                    removeFriendshipUI();
+                    break;
+                case 7:
+                    System.out.println("Showing Friends of an User...");
+                    showFriendsofUserUI();
+                    break;
+                case 8:
+                    System.out.println("Showing Friends of an User in a specific month...");
+                    showFriendsofUserUIMonth();
+                    break;
+                case 9:
+                    System.out.println("Messaging...");
+                    sendMessageUI();
+                    break;
+                case 10:
+                    System.out.println("Showing conversation beetween 2 Users...");
+                    ConversationUI();
+                    break;
+                case 11:
+                    System.out.println("Responding Group Chat...");
+                    respondGroupChat();
+                    break;
+                case 39:
+                    System.out.println("Messages:");
+                    Iterable<Message> messages=message_crt.getAll();;
+                    for(Message i:messages){
+                        System.out.println(i);
                     }
-                    System.out.println("Messages: ");
-                    for(Message message: messageService.getAllMessages()){
-                        System.out.println(message.getFrom() + " " + message.getTo() + "\nMessage: " + message.getMessageText() + "\nReply: " + message.getReply());
+                    System.out.println("");
+                    break;
+                case 40:
+                    System.out.println("Friendships:");
+                    Iterable<Friendship> friends=friendship_crt.getAll();;
+                    for(Friendship i:friends){
+                        System.out.println(i);
                     }
-                    break;
-                case "1":
-                    addFriend();
-                    break;
-                case "2":
-                    addUser();
-                    break;
-                case "3":
-                    removeFriend();
-                    break;
-                case "4":
-                    removeUser();
-                    break;
-                case "5":
-                    nrComunity();
-                    break;
-                case "6":
-                    nrComunityMax();
-                    break;
-                case "7":
-                    showFriends();
-                    break;
-                case "8":
-                    showFriendsYM();
-                    break;
-                case "9":
-                    message();
-                    break;
-                case "10":
-                    Conversation();
-                    break;
-                case "11":
-                    respond();
+                    System.out.println("");
                     break;
                 default:
-                    System.out.println("Goodbye! :^)\n");
-                    return;
+                    System.out.println("There is no valid command with that number!");
+                    break;
             }
-
         }
     }
 }
+*/

@@ -3,8 +3,6 @@ package socialnetwork.repository;
 import socialnetwork.domain.Entity;
 import socialnetwork.domain.validators.ValidationException;
 
-import java.util.List;
-
 /**
  * CRUD operations repository interface
  * @param <ID> - type E must have an attribute of type ID
@@ -30,6 +28,7 @@ public interface Repository<ID, E extends Entity<ID>> {
      */
     Iterable<E> findAll();
 
+
     /**
      *
      * @param entity
@@ -52,8 +51,7 @@ public interface Repository<ID, E extends Entity<ID>> {
      * @throws IllegalArgumentException
      *                   if the given id is null.
      */
-    E delete(ID id, List<E> l);
-
+    E delete(ID id);
 
     /**
      *

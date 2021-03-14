@@ -1,102 +1,108 @@
 package socialnetwork.service;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.value.ObservableBooleanValue;
 import socialnetwork.domain.User;
 import socialnetwork.domain.validators.UserValidator;
+import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.repository.Repository;
-import socialnetwork.utils.events.MessageEvent;
-import socialnetwork.utils.events.UserEvent;
-import socialnetwork.utils.observer.Observable;
-import socialnetwork.utils.observer.Observer;
 
+import java.util.Observable;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-public class UserService implements Observable<UserEvent> {
+public class UserService {
     private Repository<Long, User> repo;
 
     public UserService(Repository<Long, User> repo) {
         this.repo = repo;
     }
 
-    public User addUser(String firstName, String lastName) {
-        long id = 0;
-        long max = 0;
-        for (User user : getAllUsers()) {
-            id = user.getId();
-            if(max<id){
-                max = id;
+    /**
+     * create an id which isn't used at the moment by noone
+     * @return a new id
+     */
+    public long getNewId(){
+        Iterable<User> users=getAll();
+        long i=0;
+        for(User u:users){
+            if(u.getId()>i){
+                i=u.getId();
             }
         }
-        max++;
-        User user = new User(firstName,lastName);
-        user.setId(max);
-        User task = repo.save(user);
-        return task;
+        return i+1;
     }
 
-    public void removeUser(String id) {
-        long idRight;
-        idRight = UserValidator.is_long(id);
-        List<User> util;
-        util = getAllUsers();
-        repo.delete(idRight,util);
-    }
-    public Boolean checkUser(String username){
-        long id = UserValidator.is_long(username);
-        boolean ok = false;
-        for(User user:getAllUsers()){
-            if(user.getId() == id)
-                ok = true;
-        }
-        return ok;
+    /**
+     * adds a new user
+     * @param firstname
+     *          must be a string with A-Z and a-z
+     * @param lastname
+     *          must be a string with A-Z and a-z
+     * @param age
+     *          must be a number greater than 0
+     * @param fav_food
+     *          must be a string with a-z
+     * @return User
+     *          if the User was added succesfully
+     * @throws ValidationException
+     *            if the params are invalid
+     */
+    public User addUser(String firstname,String lastname,String email,String password, String age,String fav_food) {
+        User new_user=new User(firstname,lastname,email,password,age,fav_food);
+        new_user.setId(getNewId());
+        return repo.save(new_user);
     }
 
-    public User getUser(String username){
-        long id = UserValidator.is_long(username);
-        for(User user:getAllUsers()){
-            if(user.getId() == id)
-                return user;
+    /**
+     * removes a User
+     * @param id_to_remove
+     *          must not be null
+     * @return User
+     *          if the User was removed succesfully
+     * @throws ValidationException
+     *            if the id_to_remove is invalid
+     */
+    public User removeUser(String id_to_remove) {
+        UserValidator.idValidate(id_to_remove);
+        return repo.delete(Long.parseLong(id_to_remove));
+    }
+
+    /**
+     * Verifies if there is a user with the given id
+     * @param id
+     *          must not be null
+     * @return boolean
+     *          if there is a user with the given id
+     * @throws ValidationException
+     *            if the id is not valid
+     */
+    public boolean existUser(String id){
+        UserValidator.idValidate(id);
+        User u=repo.findOne(Long.parseLong(id));
+        return u != null;
+    }
+
+    /**
+     * get the User from the list of Users by their ip
+     * @param id the id we want to find in the list of Users
+     * @return the User we were searching for
+     *
+     * @throws ValidationException
+     *            if the id is not valid
+     */
+    public User getUser(String id){
+        UserValidator.idValidate(id);
+        User u=repo.findOne(Long.parseLong(id));
+        return u;
+    }
+    public User getUserEmail(String email){
+        for(User u:getAll()){
+            if(u.getEmail().equals(email))
+                return u;
         }
         return null;
     }
-    public User getUser(Long id){
-        for(User user:getAllUsers()){
-            if(user.getId().equals(id))
-                return user;
-        }
-        return null;
-    }
-
-    public List<User> getAllUsers() {
-        Iterable<User> users = repo.findAll();
-        return StreamSupport.stream(users.spliterator(),false).collect(Collectors.toList());
-    }
+    /**
+     * @return all entities
+     */
     public Iterable<User> getAll(){
         return repo.findAll();
-    }
-
-    public List<User> filterUsersName(String s) {
-        return null;
-    }
-    private List<Observer<UserEvent>> observers=new ArrayList<>();
-    @Override
-    public void addObserver(Observer<UserEvent> e) {
-        observers.add(e);
-    }
-
-    @Override
-    public void removeObserver(Observer<UserEvent> e) {
-        observers.remove(e);
-    }
-
-    @Override
-    public void notifyObservers(UserEvent t) {
-        observers.stream().forEach(x->x.update(t));
     }
 }

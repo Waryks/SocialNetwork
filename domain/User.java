@@ -6,22 +6,63 @@ import java.util.Objects;
 public class User extends Entity<Long>{
     private String firstName;
     private String lastName;
+    private String age;
+    private String favouriteFood;
+    private String email;
+    private String password;
     private List<User> friends;
 
-    public User(){}
-
-    /**Constructor
-     * @param firstName -string
-     * @param lastName -string
-     */
-    public User(String firstName, String lastName) {
+    public User(String firstName, String lastName, String age, String favouriteFood) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.age = age;
+        this.favouriteFood = favouriteFood;
     }
 
-    /**Gets the first name
-     * @return -string
-     */
+    public User(String firstName, String lastName,String email,String password, String age, String favouriteFood) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email=email;
+        this.password=password;
+        this.age = age;
+        this.favouriteFood = favouriteFood;
+    }
+    public User() {
+
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getFavouriteFood() {
+        return favouriteFood;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String age) {
+        this.email = age;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String age) {
+        this.password = age;
+    }
+
+    public void setFavouriteFood(String favouriteFood) {
+        this.favouriteFood = favouriteFood;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -30,9 +71,6 @@ public class User extends Entity<Long>{
         this.firstName = firstName;
     }
 
-    /**Gets the last name
-     * @return -string
-     */
     public String getLastName() {
         return lastName;
     }
@@ -41,16 +79,23 @@ public class User extends Entity<Long>{
         this.lastName = lastName;
     }
 
-    /**Gets the list of friends
-     * @return - list of users
-     */
     public List<User> getFriends() {
         return friends;
     }
 
     @Override
     public String toString() {
-        return getId()+","+firstName+","+lastName;
+        return "Name=" + firstName + ' ' + lastName + ';' + "(ID:" + getId() + " Email:" + getEmail() + ", Age: " + age + " ,Favourite Food: "+ favouriteFood +")";
+    }
+
+    public void addFriend(User u){
+        friends.add(u);
+    }
+    public void removeFriend(User u){
+        friends.remove(u);
+    }
+    public List<User> showFriends(){
+        return friends;
     }
 
     @Override

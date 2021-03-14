@@ -1,60 +1,43 @@
 package socialnetwork.domain.validators;
 
-import socialnetwork.domain.Friends;
 import socialnetwork.domain.Message;
 import socialnetwork.domain.User;
 
 import java.util.List;
 
-public class MessageValidator implements Validator<Message> {
-    /**Checks if the entitiy's sender id equals the reciver one
-     * @param entity , the entity that needs to be validated
-     * @throws ValidationException
-     */
+public class MessageValidator  implements Validator<Message> {
     @Override
     public void validate(Message entity) throws ValidationException {
-        for(User el:entity.getTo()) {
-            if (entity.getFrom().getId() == el.getId()) {
-                throw new ValidationException("The sender id and the reciver id need to be different!");
-            }
+        //TODO
+    }
+    /**
+     * @param id_s -the id of the entity to be validated
+     *                 id must not be null
+     * @throws ValidationException
+     *            if the id is not valid
+     */
+    public static void idValidate(String id_s) throws ValidationException{
+        Long id;
+        try{
+            id=Long.parseLong(id_s);
+        }catch(NumberFormatException exp){
+            throw new ValidationException("The id is invalid!(the id needs to be a number greater than 0)");
+        }
+        if(id<=0){
+            throw new ValidationException("The id needs to be greater than 0!");
         }
     }
 
-    /**Checks if entitiy's reciver id's are different
-     * @param users , list of users that need to be checked
-     * @throws ValidationException
-     */
-    public static void validateList(List<User> users) throws ValidationException{
-        for(int index = 0; index < users.size()-1; index++)
-            for(int jndex = index + 1; jndex < users.size(); jndex++){
-                if(users.get(index).getId().equals(users.get(jndex).getId()))
-                    throw new ValidationException("The reciver id's need to be different!");
-            }
-    }
-    /**Verifies if a string is long
-     * @param id string, the checked string
-     * @return the string in a long value
-     * @throws ValidationException
-     */
-    public static Long is_long(String id){
+    public static void NumberValidate(String nr) throws ValidationException{
+        Long Nr;
         try{
-            return Long.parseLong(id);
+            Nr=Long.parseLong(nr);
+        }catch(NumberFormatException exp){
+            throw new ValidationException("You need to enter a number!");
         }
-        catch(NumberFormatException exception){
-            throw new ValidationException(id + " is not a valid number!");
-        }
-    }
-    /**Verifies if a string is int
-     * @param id string, the checked string
-     * @return the string in a int value
-     * @throws ValidationException otherwise
-     */
-    public static Integer is_int(String id){
-        try{
-            return Integer.parseInt(id);
-        }
-        catch(NumberFormatException exception){
-            throw new ValidationException(id + " is not a valid number!");
+        if(Nr<=0){
+            throw new ValidationException("The number needs to be greater than 0!");
         }
     }
+
 }

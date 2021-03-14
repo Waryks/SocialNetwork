@@ -4,25 +4,37 @@ import socialnetwork.domain.Entity;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.domain.validators.Validator;
 import socialnetwork.repository.Repository;
+import socialnetwork.repository.paging.Page;
+import socialnetwork.repository.paging.Pageable;
+import socialnetwork.repository.paging.Paginator;
+import socialnetwork.repository.paging.PagingRepository;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<ID,E> {
+/**
+ * @param <ID> - type E must have an attribute of type ID
+ * @param <E> -  type of entities saved in repository
+ */
+public class InMemoryRepository<ID, E extends Entity<ID>> implements PagingRepository<ID,E> {
 
     private Validator<E> validator;
     Map<ID,E> entities;
+
 
     public InMemoryRepository(Validator<E> validator) {
         this.validator = validator;
         entities=new HashMap<ID,E>();
     }
 
-    /**Finds an entity of id ID
+    /**
+     *
      * @param id -the id of the entity to be returned
      *           id must not be null
-     * @return
+     * @return the entity with the specified id
+     *          or null - if there is no entity with the given id
+     * @throws IllegalArgumentException
+     *                  if id is null.
      */
     @Override
     public E findOne(ID id){
@@ -31,17 +43,25 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
         return entities.get(id);
     }
 
-    /**Finds all entities of type E
-     * @return entities of type E
+    /**
+     *
+     * @return all entities
      */
     @Override
     public Iterable<E> findAll() {
         return entities.values();
     }
 
-    /**Saves the entity
-     * @param entity entity must be not null
-     * @return the saved entity
+    /**
+     *
+     * @param entity
+     *         entity must be not null
+     * @return null- if the given entity is saved
+     *         otherwise returns the entity (id already exists)
+     * @throws ValidationException
+     *            if the entity is not valid
+     * @throws IllegalArgumentException
+     *             if the given entity is null.     *
      */
     @Override
     public E save(E entity) {
@@ -49,30 +69,39 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
             throw new IllegalArgumentException("entity must be not null");
         validator.validate(entity);
         if(entities.get(entity.getId()) != null) {
-            throw new ValidationException("The id already exists!");
+            return entity;
         }
         else entities.put(entity.getId(),entity);
         return null;
     }
 
-    /**Deletes the entity
-     * @param id id must be not null
-     * @param l list of entities of type E
-     * @return the deleted entity
+    /**
+     *  removes the entity with the specified id
+     * @param id
+     *      id must be not null
+     * @return the removed entity or null if there is no entity with the given id
+     * @throws IllegalArgumentException
+     *                   if the given id is null.
      */
     @Override
-    public E delete(ID id, List<E> l) {
-        E entity = entities.get(id);
-        if(entity == null){
-            throw new ValidationException("The id doesn't exist!");
+    public E delete(ID id) {
+        if(findOne(id)==null){
+            return null;
         }
         entities.remove(id);
-        return entity;
+        return entities.get(id);
     }
 
-    /**Updates a entity
-     * @param entity entity must not be null
-     * @return the updated entity
+    /**
+     *
+     * @param entity
+     *          entity must not be null
+     * @return null - if the entity is updated,
+     *                otherwise  returns the entity  - (e.g id does not exist).
+     * @throws IllegalArgumentException
+     *             if the given entity is null.
+     * @throws ValidationException
+     *             if the entity is not valid.
      */
     @Override
     public E update(E entity) {
@@ -91,4 +120,9 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
 
     }
 
+    @Override
+    public Page<E> findAll(Pageable pageable) {
+        Paginator<E> paginator = new Paginator<E>(pageable, this.findAll());
+        return paginator.paginate();
+    }
 }
