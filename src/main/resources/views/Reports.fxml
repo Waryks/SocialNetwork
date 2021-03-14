@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="624.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="socialnetwork.controller.Report_Controller">
+   <children>
+      <Button fx:id="ExitButton" layoutX="573.0" layoutY="360.0" mnemonicParsing="false" onAction="#handleExit" text="Exit" />
+      <Button fx:id="PDFButton1" layoutX="330.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleCreatePDF1" text="Create PDF1" />
+      <Button fx:id="PDFButton2" layoutX="330.0" layoutY="157.0" mnemonicParsing="false" onAction="#handleCreatePDF2" text="Create PDF2" />
+      <Text layoutX="330.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-creates a PDF file with all the new friends added and " />
+      <Text layoutX="336.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-creates a PDF file with all the messages received " />
+      <TableView fx:id="FriendsTable" layoutX="35.0" layoutY="144.0" prefHeight="242.0" prefWidth="286.0">
+        <columns>
+          <TableColumn fx:id="FristNameColumn" prefWidth="88.79995346069336" text="First Name" />
+          <TableColumn fx:id="LastNameColumn" prefWidth="88.00006103515625" text="Last Name" />
+            <TableColumn fx:id="DateColumn" prefWidth="109.60005187988281" text="Date" />
+        </columns>
+      </TableView>
+      <DatePicker fx:id="StartDate" editable="false" layoutX="35.0" layoutY="38.0" onAction="#handleStartChanged" prefHeight="26.0" prefWidth="286.0" />
+      <DatePicker fx:id="EndDate" editable="false" layoutX="34.0" layoutY="91.0" onAction="#handleEndChanged" prefHeight="26.0" prefWidth="286.0" />
+      <Text layoutX="34.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Start:" />
+      <Text layoutX="37.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="End:" />
+      <Text layoutX="330.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="all the messages received in the given amount of time" />
+      <Text layoutX="328.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="from the selected friend in the given amount of time" />
+      <Text layoutX="35.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Friends from the selected period:" />
+   </children>
+</AnchorPane>

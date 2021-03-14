@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane onMouseClicked="#handleRefresh1" prefHeight="496.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="socialnetwork.controller.FullProfile_Controller">
+   <children>
+      <ImageView fitHeight="562.0" fitWidth="898.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/menuBackground.jpg" />
+         </image>
+      </ImageView>
+      <TabPane layoutY="-8.0" onMouseClicked="#handleRefresh1" prefHeight="471.0" prefWidth="756.0" style="color: white;" stylesheets="@../Css/Tab.css" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Details">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="246.0" prefWidth="497.0">
+                     <children>
+                        <AnchorPane layoutX="19.0" layoutY="28.0" opacity="0.67" prefHeight="384.0" prefWidth="296.0" style="-fx-background-color: white;">
+                           <children>
+                              <Text fx:id="firstnameText" layoutX="22.0" layoutY="215.0" strokeType="OUTSIDE" strokeWidth="0.0" text="First Name:">
+                                 <font>
+                                    <Font name="Arial" size="18.0" />
+                                 </font>
+                              </Text>
+                              <Text fx:id="lastnameText" layoutX="22.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Last Name:">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Text>
+                              <Text fx:id="FavFoodText" layoutX="22.0" layoutY="293.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Favourite Food:">
+                                 <font>
+                                    <Font name="Arial" size="18.0" />
+                                 </font>
+                              </Text>
+                              <Text fx:id="ageText" layoutX="22.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Age:">
+                                 <font>
+                                    <Font name="Arial" size="18.0" />
+                                 </font>
+                              </Text>
+                              <Text fx:id="emailText" layoutX="22.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:">
+                                 <font>
+                                    <Font name="Arial" size="18.0" />
+                                 </font>
+                              </Text>
+                              <Text fx:id="noFriendsText" layoutX="22.0" layoutY="353.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number of Friends:">
+                                 <font>
+                                    <Font name="Arial" size="18.0" />
+                                 </font>
+                              </Text>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="70.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Images/profilepic.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                        <TableView fx:id="FriendsTable1" layoutX="351.0" layoutY="41.0" onMouseClicked="#handleSelectFriends" prefHeight="290.0" prefWidth="398.0" style="-fx-background-color: transparent; -fx-border-color: white;" stylesheets="@../Css/Table.css">
+                           <columns>
+                              <TableColumn fx:id="FriendsFirstName" prefWidth="99.20001220703125" text="First Name" />
+                              <TableColumn fx:id="FriendsLastName" prefWidth="103.99996948242188" text="Last Name" />
+                              <TableColumn fx:id="FriendsDate" prefWidth="187.20001220703125" text="Date" />
+                           </columns>
+                        </TableView>
+                        <Text layoutX="492.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="List of Friends:">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font></Text>
+                        <Button fx:id="RemoveFriendshipButton" layoutX="568.0" layoutY="344.0" mnemonicParsing="false" onAction="#handleRemoveFriendship" opacity="0.61" prefHeight="30.0" prefWidth="164.0" style="-fx-background-color: white;" text="Remove Friendship">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <Pagination fx:id="PaginationFriends" layoutX="351.0" layoutY="330.0" onMouseMoved="#handleRefreshFriends" pageCount="10" prefHeight="48.0" prefWidth="200.0" stylesheets="@../Css/Pagination.css" />
+                        <Text fx:id="idText" fill="WHITE" layoutX="677.0" layoutY="418.0" strokeType="OUTSIDE" strokeWidth="0.0" text="id:">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Friend Requests">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="427.0" prefWidth="670.0">
+                     <children>
+                        <TableView fx:id="FRequestsTable" layoutX="14.0" layoutY="42.0" onMouseClicked="#handleSelectReceived" prefHeight="300.0" prefWidth="342.0" style="-fx-background-color: transparent; -fx-border-color: white;" stylesheets="@../Css/Table.css">
+                           <columns>
+                              <TableColumn fx:id="RequestsFirstName" prefWidth="75.0" text="First Name" />
+                              <TableColumn fx:id="RequestsLastName" prefWidth="75.0" text="Last Name" />
+                              <TableColumn fx:id="RequestsDate" prefWidth="113.60003662109375" text="Date" />
+                              <TableColumn fx:id="RFRStatusColumn" prefWidth="72.79998779296875" text="Status" />
+                           </columns>
+                        </TableView>
+                        <Text layoutX="144.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Received:">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font></Text>
+                        <Text layoutX="555.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sent:">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font></Text>
+                        <TableView fx:id="SentRequestsTable" layoutX="405.0" layoutY="42.0" onMouseClicked="#handleSelectSent" prefHeight="303.0" prefWidth="346.0" style="-fx-background-color: transparent; -fx-border-color: white;" stylesheets="@../Css/Table.css">
+                           <columns>
+                              <TableColumn fx:id="SRequestsFirstName" prefWidth="75.0" text="First Name" />
+                              <TableColumn fx:id="SRequestsLastName" prefWidth="75.0" text="Last Name" />
+                              <TableColumn fx:id="SRequestsDate" prefWidth="139.99998779296874" text="Date" />
+                              <TableColumn fx:id="SFRStatusColumn" prefWidth="51.199951171875" text="Status" />
+                           </columns>
+                        </TableView>
+                        <Button fx:id="RefuseRequestButton" layoutX="14.0" layoutY="356.0" mnemonicParsing="false" onAction="#handleRefuseRequest" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: white; -fx-border-color: black;" text="Refuse">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <Button fx:id="AcceptRequestButton" layoutX="284.0" layoutY="356.0" mnemonicParsing="false" onAction="#handleAcceptRequest" prefHeight="29.0" prefWidth="70.0" style="-fx-background-color: white; -fx-border-color: black;" text="Accept">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <Button fx:id="RemoveSRequest" layoutX="666.0" layoutY="356.0" mnemonicParsing="false" onAction="#handleRemoveSentRequest" prefHeight="30.0" prefWidth="84.0" style="-fx-background-color: white; -fx-border-color: black;" text="Remove">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <Button fx:id="SendRequestButton" layoutX="405.0" layoutY="356.0" mnemonicParsing="false" onAction="#handleSendRequest" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: white; -fx-border-color: black;" text="Send">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <TextField fx:id="IdtoSendRequest" layoutX="405.0" layoutY="398.0" prefHeight="26.0" prefWidth="89.0" promptText="The Users ID" style="-fx-border-color: black;">
+                           <font>
+                              <Font name="Arial" size="12.0" />
+                           </font></TextField>
+                        <Pagination fx:id="PaginationSentRequest" layoutX="476.0" layoutY="341.0" onMouseMoved="#handleRefreshSent" pageCount="10" prefHeight="55.0" prefWidth="191.0" stylesheets="@../Css/Pagination.css" />
+                        <Pagination fx:id="PaginationReveivedRequest" layoutX="84.0" layoutY="343.0" onMouseMoved="#handleRefreshReceived" pageCount="10" prefHeight="55.0" prefWidth="200.0" stylesheets="@../Css/Pagination.css" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Messages">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="GroupTable" layoutX="14.0" layoutY="27.0" onMouseClicked="#handleSelectGroup" prefHeight="202.0" prefWidth="253.0" style="-fx-background-color: transparent; -fx-border-color: white;" stylesheets="@../Css/Table.css">
+                           <columns>
+                              <TableColumn fx:id="DateColumn1" prefWidth="77.59994125366211" text="Date" />
+                              <TableColumn fx:id="Group_NameColumn" prefWidth="168.79999084472655" text="Group Name" />
+                           </columns>
+                        </TableView>
+                        <ListView fx:id="TheChat" editable="true" layoutX="281.0" layoutY="27.0" onMouseClicked="#handlePossibleReply" prefHeight="315.0" prefWidth="282.0" style="-fx-background-color: transparent;" stylesheets="@../Css/ListView.css" />
+                        <Button fx:id="LeaveGroupButton" layoutX="7.0" layoutY="296.0" mnemonicParsing="false" onAction="#handleLeaveGroup" prefHeight="32.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: black;" text="Leave Group">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Button>
+                        <Button fx:id="GroupChatButton" layoutX="110.0" layoutY="297.0" mnemonicParsing="false" onAction="#handleGroupChat" prefHeight="30.0" prefWidth="162.0" style="-fx-background-color: white; -fx-border-color: black;" text="Open Group Chat">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <Button fx:id="OpenPrivateChatButton" layoutX="112.0" layoutY="356.0" mnemonicParsing="false" onAction="#handlePrivateChat" prefHeight="30.0" prefWidth="160.0" style="-fx-background-color: white; -fx-border-color: black;" text="Open Private Chat">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <TextField fx:id="privatechatidtext" layoutX="11.0" layoutY="356.0" prefHeight="30.0" prefWidth="96.0" promptText="The Users ID" style="-fx-border-color: black;" />
+                        <Text layoutX="106.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Groups:">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font></Text>
+                        <TextField fx:id="MessageField" layoutX="280.0" layoutY="356.0" onAction="#OnEnter" prefHeight="30.0" prefWidth="191.0" promptText="Your Message" style="-fx-border-color: black;">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></TextField>
+                        <Button fx:id="SendMessageButton" layoutX="477.0" layoutY="356.0" mnemonicParsing="false" onAction="#handleSendMessage" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: white; -fx-border-color: black;" text="Send">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <TableView fx:id="MembersTable" layoutX="572.0" layoutY="53.0" prefHeight="359.0" prefWidth="182.0" style="-fx-background-color: transparent; -fx-border-color: white;" stylesheets="@../Css/Table.css">
+                           <columns>
+                              <TableColumn fx:id="FirstNameColumnMembers" prefWidth="85.5999755859375" text="FirstName" />
+                              <TableColumn fx:id="LastNameColumnMembers" prefWidth="90.39996337890625" text="LastName" />
+                           </columns>
+                        </TableView>
+                        <Text fx:id="NameChat" layoutX="281.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The Chat:">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="MembersText" layoutX="582.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Members of Group:">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font>
+                        </Text>
+                        <Pagination fx:id="PaginationGroups" layoutX="38.0" layoutY="240.0" onMouseMoved="#handleRefreshGroups" pageCount="10" prefHeight="47.0" prefWidth="200.0" stylesheets="@../Css/Pagination.css" />
+                        <Button fx:id="CancelReplyButton" layoutX="465.0" layoutY="401.0" mnemonicParsing="false" onAction="#handleCancelReply" prefHeight="23.0" prefWidth="97.0" style="-fx-background-color: white; -fx-border-color: black;" text="Cancel Reply">
+                           <font>
+                              <Font name="Arial" size="12.0" />
+                           </font></Button>
+                        <Line endX="160.0" endY="30.199981689453125" layoutX="121.0" layoutY="312.0" startX="-121.00001525878906" startY="28.999969482421875" stroke="WHITE" />
+                     </children></AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Create New Group">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="theGroupName" layoutX="23.0" layoutY="87.0" prefHeight="30.0" prefWidth="193.0" promptText="Insert Group Name" style="-fx-border-color: black;">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></TextField>
+                        <TextField fx:id="IdtoAdd" layoutX="24.0" layoutY="151.0" prefHeight="30.0" prefWidth="79.0" promptText="Users ID" style="-fx-border-color: black;">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></TextField>
+                        <TableView fx:id="UsersTable" layoutX="396.0" layoutY="38.0" onMouseClicked="#handleSelectListUsers" prefHeight="363.0" prefWidth="352.0" style="-fx-background-color: transparent; -fx-border-color: white;" stylesheets="@../Css/Table.css">
+                           <columns>
+                              <TableColumn fx:id="FirstNameColumn" prefWidth="179.99996948242188" text="First Name" />
+                              <TableColumn fx:id="LastNameColumn1" prefWidth="164.79998779296875" text="Last Name" />
+                           </columns>
+                        </TableView>
+                        <Button fx:id="AddButton" layoutX="115.0" layoutY="151.0" mnemonicParsing="false" onAction="#handleAddUser" prefHeight="30.0" style="-fx-background-color: white; -fx-border-color: black;" text="Add the User">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <Button fx:id="FinishButton" layoutX="23.0" layoutY="299.0" mnemonicParsing="false" onAction="#handleFInish" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: white; -fx-border-color: black;" text="Finish">
+                           <font>
+                              <Font name="Arial" size="24.0" />
+                           </font></Button>
+                        <Button fx:id="CancelButton" layoutX="23.0" layoutY="357.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="44.0" prefWidth="79.0" style="-fx-background-color: white; -fx-border-color: black;" text="Cancel">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <Text layoutX="23.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Group Name:">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font></Text>
+                        <Text layoutX="24.0" layoutY="139.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Users:">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font></Text>
+                        <Button fx:id="RemoveUserButton" layoutX="188.0" layoutY="357.0" mnemonicParsing="false" onAction="#handleRemove" prefHeight="44.0" prefWidth="195.0" style="-fx-border-color: black; -fx-background-color: white;" text="Remove a Selected User">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <Text layoutX="484.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current List of Users:">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font></Text>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="228.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/Group.png" />
+                           </image>
+                        </ImageView>
+                     </children></AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Reports">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <AnchorPane layoutX="353.0" layoutY="74.0" opacity="0.54" prefHeight="98.0" prefWidth="316.0" style="-fx-background-color: white;" />
+                        <AnchorPane layoutX="354.0" layoutY="210.0" opacity="0.54" prefHeight="98.0" prefWidth="316.0" style="-fx-background-color: white;" />
+                        <DatePicker fx:id="StartDate" editable="false" layoutX="34.0" layoutY="46.0" onAction="#handleStartChanged" prefHeight="26.0" prefWidth="286.0" style="-fx-background-color: black;" />
+                        <DatePicker fx:id="EndDate" editable="false" layoutX="34.0" layoutY="107.0" onAction="#handleEndChanged" prefHeight="26.0" prefWidth="286.0" style="-fx-background-color: black;" />
+                        <Text layoutX="162.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Start:">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Text>
+                        <Text layoutX="163.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="End:">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Text>
+                        <TableView fx:id="FriendsTable" layoutX="34.0" layoutY="169.0" prefHeight="242.0" prefWidth="295.0" style="-fx-background-color: transparent; -fx-border-color: white;" stylesheets="@../Css/Table.css">
+                           <columns>
+                              <TableColumn fx:id="FristNameColumn" prefWidth="88.79995346069336" text="First Name" />
+                              <TableColumn fx:id="LastNameColumn" prefWidth="88.00006103515625" text="Last Name" />
+                              <TableColumn fx:id="DateColumn" prefWidth="109.60005187988281" text="Date" />
+                           </columns>
+                        </TableView>
+                        <Text layoutX="103.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Friends from that period:">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Text>
+                        <Button fx:id="PDFButton2" layoutX="361.0" layoutY="220.0" mnemonicParsing="false" onAction="#handleCreatePDF2" style="-fx-background-color: white; -fx-border-color: black;" text="Create PDF2" />
+                        <Text layoutX="367.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-creates a PDF file with all the messages received " />
+                        <Text layoutX="371.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" text="from the selected friend in the given amount of time" />
+                        <Button fx:id="PDFButton1" layoutX="363.0" layoutY="86.0" mnemonicParsing="false" onAction="#handleCreatePDF1" style="-fx-background-color: white; -fx-border-color: black;" text="Create PDF1" />
+                        <Text layoutX="363.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-creates a PDF file with all the new friends added and " />
+                        <Text layoutX="369.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="all the messages received in the given amount of time" />
+                     </children></AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Events">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="CreateEventButton" layoutX="264.0" layoutY="110.0" mnemonicParsing="false" onAction="#handleCreateEvent" prefHeight="30.0" style="-fx-background-color: white; -fx-border-color: black;" text="Create Event">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <TextField fx:id="EventName" layoutX="14.0" layoutY="40.0" prefHeight="30.0" prefWidth="210.0" promptText="Event Name" style="-fx-border-color: black;">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></TextField>
+                        <Text layoutX="14.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Creating New Event:">
+                           <font>
+                              <Font size="23.0" />
+                           </font>
+                        </Text>
+                        <DatePicker fx:id="EventDate" editable="false" layoutX="14.0" layoutY="74.0" prefHeight="30.0" prefWidth="210.0" promptText="Event Date" style="-fx-background-color: black;" />
+                        <TableView fx:id="AllEventsTable" layoutX="391.0" layoutY="71.0" onMouseClicked="#handleSelectAE" prefHeight="236.0" prefWidth="359.0" style="-fx-background-color: transparent; -fx-border-color: white;" stylesheets="@../Css/Table.css">
+                          <columns>
+                            <TableColumn fx:id="AEName" prefWidth="97.5999755859375" text="Name" />
+                            <TableColumn fx:id="AEDate" prefWidth="82.4000244140625" text="Date" />
+                              <TableColumn fx:id="AEHour" minWidth="7.199951171875" prefWidth="37.5999755859375" text="Hour" />
+                              <TableColumn fx:id="AEMinute" prefWidth="49.60009765625" text="Minute" />
+                              <TableColumn fx:id="AENoMembers" prefWidth="83.199951171875" text="No. Members" />
+                          </columns>
+                        </TableView>
+                        <Button fx:id="UnsubscribeButton" layoutX="219.0" layoutY="392.0" mnemonicParsing="false" onAction="#handleUnsubscribe" prefHeight="30.0" prefWidth="139.0" style="-fx-background-color: white; -fx-border-color: black;" text="Unsubscribe">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <Text layoutX="86.0" layoutY="177.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your subscribed events:">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font>
+                        </Text>
+                        <TextField fx:id="HourLayer" layoutX="14.0" layoutY="110.0" prefHeight="30.0" prefWidth="51.0" promptText="Hour" style="-fx-border-color: black;">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></TextField>
+                        <TextField fx:id="MinuteLayer" layoutX="82.0" layoutY="110.0" prefHeight="30.0" prefWidth="64.0" promptText="Minute" style="-fx-border-color: black;">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></TextField>
+                        <Text layoutX="70.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text=":">
+                           <font>
+                              <Font size="23.0" />
+                           </font>
+                        </Text>
+                        <TableView fx:id="SubscribedEventsTable" layoutX="5.0" layoutY="187.0" onMouseClicked="#handleSelectSE" prefHeight="190.0" prefWidth="365.0" style="-fx-background-color: transparent; -fx-border-color: white;" stylesheets="@../Css/Table.css">
+                           <columns>
+                              <TableColumn fx:id="SEName" prefWidth="98.39999103546143" text="Name" />
+                              <TableColumn fx:id="SEDate" prefWidth="81.60000610351562" text="Date" />
+                              <TableColumn fx:id="SEHour" minWidth="7.199951171875" prefWidth="37.5999755859375" text="Hour" />
+                              <TableColumn fx:id="SEMinute" prefWidth="56.00007629394531" text="Minute" />
+                              <TableColumn fx:id="SENoMembers" prefWidth="83.199951171875" text="No. Members" />
+                           </columns>
+                        </TableView>
+                        <Text layoutX="525.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All Events:">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font>
+                        </Text>
+                        <Button fx:id="SubscribeButton" layoutX="499.0" layoutY="390.0" mnemonicParsing="false" onAction="#handleSubscribe" prefHeight="30.0" prefWidth="138.0" style="-fx-background-color: white; -fx-border-color: black;" text="Subscribe">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font></Button>
+                        <Line endX="270.5000305175781" layoutX="108.0" layoutY="153.0" startX="-108.00000762939453" stroke="WHITE" />
+                        <Line endX="8.000030517578125" endY="380.79998779296875" layoutX="370.0" layoutY="87.0" startX="8.000030517578125" startY="-87.0" stroke="WHITE" />
+                        <Pagination fx:id="numberofPage" layoutX="397.0" layoutY="307.0" onMouseMoved="#handleGetPage" pageCount="10" prefHeight="52.0" prefWidth="342.0" stylesheets="@../Css/Pagination.css" />
+                        <Pagination fx:id="PaginationSubscribedEvents" layoutX="16.0" layoutY="377.0" onMouseMoved="#handleRefreshSE" pageCount="10" prefHeight="44.0" prefWidth="200.0" stylesheets="@../Css/Pagination.css" />
+                        <ImageView fitHeight="79.0" fitWidth="95.0" layoutX="276.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/calendar.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="59.0" fitWidth="61.0" layoutX="608.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/Event.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <Button fx:id="LogOutButton" layoutX="667.0" layoutY="454.0" mnemonicParsing="false" onAction="#handleLogOut" prefHeight="34.0" prefWidth="79.0" style="-fx-background-color: white; -fx-border-color: black;" text="Log Out">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
